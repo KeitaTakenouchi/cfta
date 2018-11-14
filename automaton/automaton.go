@@ -59,7 +59,7 @@ func (cfta *CFTA) AddTransition(f Alphabet, stateIds []int, state int) {
 	}
 
 	// add a transition
-	input := createTransitionInput(f, parameterStates)
+	input := newTransitionInput(f, parameterStates)
 	_, ok := cfta.Transitions[input]
 	if !ok {
 		cfta.Transitions[input] = cfta.getState(state)
@@ -129,10 +129,6 @@ type Alphabet struct {
 	arity  int
 }
 
-func (al *Alphabet) String() string {
-	return al.symbol + "[" + strconv.Itoa(al.arity) + "]"
-}
-
 // NewAlphabet is a constructor of Alphabet.
 func NewAlphabet(symbol string, arity int) Alphabet {
 	return Alphabet{
@@ -141,32 +137,17 @@ func NewAlphabet(symbol string, arity int) Alphabet {
 	}
 }
 
+func (al *Alphabet) String() string {
+	return al.symbol + "[" + strconv.Itoa(al.arity) + "]"
+}
+
 // TransitionInput is a pair of alphabet and parameters.
 type TransitionInput struct {
 	f      Alphabet
 	params parameters
 }
 
-func (ti *TransitionInput) String() string {
-	var buf strings.Builder
-	buf.WriteString(ti.f.symbol)
-
-	buf.WriteString("(")
-	states := ti.params.getParams()
-	for i, state := range states {
-		if i == len(states)-1 {
-			buf.WriteString(state.String())
-		} else {
-			buf.WriteString(state.String())
-			buf.WriteString(", ")
-		}
-	}
-	buf.WriteString(")")
-
-	return buf.String()
-}
-
-func createTransitionInput(f Alphabet, states []State) TransitionInput {
+func newTransitionInput(f Alphabet, states []State) TransitionInput {
 	if f.arity != len(states) {
 		panic("illegal arguments.")
 	}
@@ -189,6 +170,25 @@ func createTransitionInput(f Alphabet, states []State) TransitionInput {
 		f:      f,
 		params: params,
 	}
+}
+
+func (ti *TransitionInput) String() string {
+	var buf strings.Builder
+	buf.WriteString(ti.f.symbol)
+
+	buf.WriteString("(")
+	states := ti.params.getParams()
+	for i, state := range states {
+		if i == len(states)-1 {
+			buf.WriteString(state.String())
+		} else {
+			buf.WriteString(state.String())
+			buf.WriteString(", ")
+		}
+	}
+	buf.WriteString(")")
+
+	return buf.String()
 }
 
 type parameters interface {
