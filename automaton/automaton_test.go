@@ -23,7 +23,6 @@ func TestNewCFTA(t *testing.T) {
 	not := NewAlphabet("NOT", 1)
 	cfta.AddTransition(not, []int{0}, 1)
 	cfta.AddTransition(not, []int{1}, 0)
-	cfta.AddTransition(not, []int{1}, 1)
 
 	// final states
 	cfta.AddFinalState(1)
