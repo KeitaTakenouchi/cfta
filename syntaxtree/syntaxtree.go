@@ -19,12 +19,12 @@ func NewSyntaxTree(symbol string) *SyntaxTree {
 }
 
 // NewSyntaxTreeWithSubs is a constructor for SyntaxTree with defalult sub trees.
-func NewSyntaxTreeWithSubs(symbol string, trees ...*SyntaxTree) *SyntaxTree {
+func NewSyntaxTreeWithSubs(symbol string, subTrees ...*SyntaxTree) *SyntaxTree {
 	tree := &SyntaxTree{
 		Symbol:   symbol,
 		SubTrees: make([]*SyntaxTree, 0),
 	}
-	tree.AddSubTree(trees...)
+	tree.AddSubTree(subTrees...)
 	return tree
 }
 
