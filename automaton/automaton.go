@@ -26,15 +26,14 @@ func NewCFTA() *CFTA {
 }
 
 // AddTransition adds transition.
-func (cfta *CFTA) AddTransition(f Alphabet, stateIds []int, state int) {
+func (cfta *CFTA) AddTransition(f Alphabet, fromStateIds []int, toStateId int) {
 	var parameterStates []State
 
-	for _, id := range stateIds {
-		state := cfta.getState(id)
-		parameterStates = append(parameterStates, state)
+	for _, id := range fromStateIds {
+		parameterStates = append(parameterStates, cfta.getState(id))
 	}
 
-	// add states
+	// add states if not exist.
 	for _, paramState := range parameterStates {
 		exists := false
 		for _, existingState := range cfta.States {
@@ -48,7 +47,7 @@ func (cfta *CFTA) AddTransition(f Alphabet, stateIds []int, state int) {
 		}
 	}
 
-	// add alphabets
+	// add alphabets if not exist.
 	exists := false
 	for _, existingAlphabet := range cfta.Alphabets {
 		if f == existingAlphabet {
@@ -63,7 +62,7 @@ func (cfta *CFTA) AddTransition(f Alphabet, stateIds []int, state int) {
 	input := newTransitionInput(f, parameterStates)
 	_, ok := cfta.Transitions[input]
 	if !ok {
-		cfta.Transitions[input] = cfta.getState(state)
+		cfta.Transitions[input] = cfta.getState(toStateId)
 	} else {
 		fmt.Printf("Key \"%s\" already exists.\n", input.String())
 	}
