@@ -2,6 +2,7 @@ package automaton
 
 import (
 	"fmt"
+	"github.com/KeitaTakenouchi/cfta/syntaxtree"
 	"strconv"
 	"strings"
 )
@@ -72,6 +73,47 @@ func (cfta *CFTA) AddTransition(f Alphabet, stateIds []int, state int) {
 func (cfta *CFTA) AddFinalState(finalStateId int) {
 	state := cfta.getState(finalStateId)
 	cfta.FinalStates = append(cfta.FinalStates, state)
+}
+
+// Evaluate returns true if the given tree is accepted or false otherwise.
+func (cfta *CFTA) Evaluate(tree syntaxtree.SyntaxTree) bool {
+	state := cfta.eval(tree)
+	for _, fstate := range cfta.FinalStates {
+		if fstate == state {
+			return true
+		}
+	}
+	return false
+}
+
+func (cfta *CFTA) eval(tree syntaxtree.SyntaxTree) State {
+	alphabet := cfta.searchAlphabetBySymbol(tree.Symbol)
+	if alphabet == nil {
+		msg := fmt.Sprintf("Invalid alphabet: %s.", tree.Symbol)
+		panic(msg)
+	}
+
+	subStates := make([]State, 0)
+	for _, subTree := range tree.SubTrees {
+		subStates = append(subStates, cfta.eval(*subTree))
+	}
+	if len(subStates) != alphabet.arity {
+		msg := fmt.Sprintf("Invalid tree. arity of %s is not %d.", alphabet.symbol, len(subStates))
+		panic(msg)
+	}
+
+	transInput := newTransitionInput(*alphabet, subStates)
+	nextState := cfta.Transitions[transInput]
+	return nextState
+}
+
+func (cfta *CFTA) searchAlphabetBySymbol(symbol string) *Alphabet {
+	for _, alphabet := range cfta.Alphabets {
+		if symbol == alphabet.symbol {
+			return &alphabet
+		}
+	}
+	return nil
 }
 
 func (cfta *CFTA) getState(id int) State {
