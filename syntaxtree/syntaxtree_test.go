@@ -1,66 +1,65 @@
 package syntaxtree
 
 import (
-	"fmt"
 	"testing"
 )
 
-func TestSyntaxNode_addSubNode(t *testing.T) {
+func TestSyntaxTree_addSubTree(t *testing.T) {
 	tests := []struct {
 		name  string
-		nodes []*SyntaxNode
+		trees []*SyntaxTree
 		want  int
 	}{
 		{
-			nodes: []*SyntaxNode{
-				&SyntaxNode{
+			trees: []*SyntaxTree{
+				&SyntaxTree{
 					Symbol: "sub_A",
 				},
 			},
 			want: 1,
 		},
 		{
-			nodes: []*SyntaxNode{
-				&SyntaxNode{
+			trees: []*SyntaxTree{
+				&SyntaxTree{
 					Symbol: "sub_A",
 				},
-				&SyntaxNode{
+				&SyntaxTree{
 					Symbol: "sub_B",
 				},
 			},
 			want: 2,
 		},
 		{
-			nodes: []*SyntaxNode{
-				&SyntaxNode{
+			trees: []*SyntaxTree{
+				&SyntaxTree{
 					Symbol: "sub_A",
 				},
-				&SyntaxNode{
+				&SyntaxTree{
 					Symbol: "sub_B",
 				},
-				&SyntaxNode{
+				&SyntaxTree{
 					Symbol: "sub_C",
 				},
 			},
 			want: 3,
 		},
 		{
-			nodes: []*SyntaxNode{
-				&SyntaxNode{
+			trees: []*SyntaxTree{
+				&SyntaxTree{
 					Symbol: "sub_A",
-					SubNodes: []*SyntaxNode{
-						&SyntaxNode{
+					SubTrees: []*SyntaxTree{
+						&SyntaxTree{
 							Symbol: "sub_A_A",
 						},
-						&SyntaxNode{
+						&SyntaxTree{
 							Symbol: "sub_A_B",
 						},
 					},
 				},
-				&SyntaxNode{
+				&SyntaxTree{
 					Symbol: "sub_B",
 				},
-				&SyntaxNode{
+				&SyntaxTree{
 					Symbol: "sub_C",
 				},
 			},
@@ -69,10 +68,10 @@ func TestSyntaxNode_addSubNode(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			sn := NewSyntaxNode("test")
-			sn.AddSubNode(tt.nodes...)
-			if tt.want != len(sn.SubNodes) {
-				t.Errorf("wrong size of children. expected=%d, but actual=%d", tt.want, len(sn.SubNodes))
+			sn := NewSyntaxTree("test")
+			sn.AddSubTree(tt.trees...)
+			if tt.want != len(sn.SubTrees) {
+				t.Errorf("wrong size of children. expected=%d, but actual=%d", tt.want, len(sn.SubTrees))
 			}
 		})
 	}

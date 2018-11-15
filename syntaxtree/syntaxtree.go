@@ -4,51 +4,53 @@ import (
 	"bytes"
 )
 
-// SyntaxNode is a node of syntax tree.
-type SyntaxNode struct {
+// SyntaxTree is a tree of syntax tree.
+type SyntaxTree struct {
 	Symbol   string
-	SubNodes []*SyntaxNode
+	SubTrees []*SyntaxTree
 }
 
-// NewSyntaxNode is a constructor for SyntaxNode.
-func NewSyntaxNode(symbol string) *SyntaxNode {
-	return &SyntaxNode{
+// NewSyntaxTree is a constructor for SyntaxTree.
+func NewSyntaxTree(symbol string) *SyntaxTree {
+	return &SyntaxTree{
 		Symbol:   symbol,
-		SubNodes: make([]*SyntaxNode, 0),
+		SubTrees: make([]*SyntaxTree, 0),
 	}
 }
 
-// NewSyntaxNodeWithSubNodes is a constructor for SyntaxNode with defalult sub nodes.
-func NewSyntaxNodeWithSubNodes(symbol string, node ...*SyntaxNode) *SyntaxNode {
-	return &SyntaxNode{
+// NewSyntaxTreeWithSubs is a constructor for SyntaxTree with defalult sub trees.
+func NewSyntaxTreeWithSubs(symbol string, trees ...*SyntaxTree) *SyntaxTree {
+	tree := &SyntaxTree{
 		Symbol:   symbol,
-		SubNodes: make([]*SyntaxNode, 0),
+		SubTrees: make([]*SyntaxTree, 0),
 	}
+	tree.AddSubTree(trees...)
+	return tree
 }
 
-// AddSubNode adds sub nodes to syntax node.
-func (sn *SyntaxNode) AddSubNode(node ...*SyntaxNode) {
-	sn.SubNodes = append(sn.SubNodes, node...)
+// AddSubTree adds sub trees to syntax tree.
+func (sn *SyntaxTree) AddSubTree(tree ...*SyntaxTree) {
+	sn.SubTrees = append(sn.SubTrees, tree...)
 }
 
-func (sn *SyntaxNode) String() string {
+func (sn *SyntaxTree) String() string {
 	var buf bytes.Buffer
 
 	buf.WriteString(sn.Symbol)
 
-	if len(sn.SubNodes) != 0 {
+	if len(sn.SubTrees) != 0 {
 		buf.WriteString("(")
 	}
 
-	for i, sub := range sn.SubNodes {
-		if i == len(sn.SubNodes)-1 {
+	for i, sub := range sn.SubTrees {
+		if i == len(sn.SubTrees)-1 {
 			buf.WriteString(sub.String())
 		} else {
 			buf.WriteString(sub.String() + ", ")
 		}
 	}
 
-	if len(sn.SubNodes) != 0 {
+	if len(sn.SubTrees) != 0 {
 		buf.WriteString(")")
 	}
 
