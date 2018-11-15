@@ -1,6 +1,9 @@
 package syntaxtree
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestSyntaxNode_addSubNode(t *testing.T) {
 	tests := []struct {
@@ -67,7 +70,7 @@ func TestSyntaxNode_addSubNode(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			sn := NewSyntaxNode("test")
-			sn.addSubNode(tt.nodes...)
+			sn.AddSubNode(tt.nodes...)
 			if tt.want != len(sn.SubNodes) {
 				t.Errorf("wrong size of children. expected=%d, but actual=%d", tt.want, len(sn.SubNodes))
 			}
