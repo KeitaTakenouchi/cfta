@@ -102,7 +102,11 @@ func (cfta *CFTA) eval(tree tree.SyntaxTree) State {
 	}
 
 	transInput := newTransitionInput(*alphabet, subStates)
-	nextState := cfta.Transitions[transInput]
+	nextState, ok := cfta.Transitions[transInput]
+	if !ok {
+		msg := fmt.Sprintf("Invalid transition %s.", transInput.String())
+		panic(msg)
+	}
 	return nextState
 }
 
