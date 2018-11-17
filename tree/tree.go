@@ -1,4 +1,4 @@
-package syntaxtree
+package tree
 
 import (
 	"bytes"

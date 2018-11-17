@@ -2,7 +2,7 @@ package automaton
 
 import (
 	"fmt"
-	"github.com/KeitaTakenouchi/cfta/syntaxtree"
+	"github.com/KeitaTakenouchi/cfta/tree"
 	"strconv"
 	"strings"
 )
@@ -75,7 +75,7 @@ func (cfta *CFTA) AddFinalState(finalStateId int) {
 }
 
 // Evaluate returns true if the given tree is accepted or false otherwise.
-func (cfta *CFTA) Evaluate(tree syntaxtree.SyntaxTree) bool {
+func (cfta *CFTA) Evaluate(tree tree.SyntaxTree) bool {
 	state := cfta.eval(tree)
 	for _, fstate := range cfta.FinalStates {
 		if fstate == state {
@@ -85,7 +85,7 @@ func (cfta *CFTA) Evaluate(tree syntaxtree.SyntaxTree) bool {
 	return false
 }
 
-func (cfta *CFTA) eval(tree syntaxtree.SyntaxTree) State {
+func (cfta *CFTA) eval(tree tree.SyntaxTree) State {
 	alphabet := cfta.searchAlphabetBySymbol(tree.Symbol)
 	if alphabet == nil {
 		msg := fmt.Sprintf("Invalid alphabet: %s.", tree.Symbol)

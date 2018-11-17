@@ -1,7 +1,7 @@
 package automaton
 
 import (
-	"github.com/KeitaTakenouchi/cfta/syntaxtree"
+	"github.com/KeitaTakenouchi/cfta/tree"
 	"testing"
 )
 
@@ -10,60 +10,60 @@ func TestCFTA_Evaluate(t *testing.T) {
 
 	tests := []struct {
 		name string
-		tree syntaxtree.SyntaxTree
+		tree tree.SyntaxTree
 		want bool
 	}{
 		{
 			name: "0",
-			tree: *syntaxtree.NewSyntaxTree("0"),
+			tree: *tree.NewSyntaxTree("0"),
 			want: true,
 		},
 		{
 			name: "1",
-			tree: *syntaxtree.NewSyntaxTree("1"),
+			tree: *tree.NewSyntaxTree("1"),
 			want: false,
 		},
 		{
 			name: "AND(0, 1)",
-			tree: *syntaxtree.NewSyntaxTreeWithSubs("AND",
-				syntaxtree.NewSyntaxTree("0"),
-				syntaxtree.NewSyntaxTree("1"),
+			tree: *tree.NewSyntaxTreeWithSubs("AND",
+				tree.NewSyntaxTree("0"),
+				tree.NewSyntaxTree("1"),
 			),
 			want: true,
 		},
 		{
 			name: "AND(1, 1)",
-			tree: *syntaxtree.NewSyntaxTreeWithSubs("AND",
-				syntaxtree.NewSyntaxTree("1"),
-				syntaxtree.NewSyntaxTree("1"),
+			tree: *tree.NewSyntaxTreeWithSubs("AND",
+				tree.NewSyntaxTree("1"),
+				tree.NewSyntaxTree("1"),
 			),
 			want: false,
 		},
 		{
 			name: "AND(0, 0)",
-			tree: *syntaxtree.NewSyntaxTreeWithSubs("AND",
-				syntaxtree.NewSyntaxTree("0"),
-				syntaxtree.NewSyntaxTree("0"),
+			tree: *tree.NewSyntaxTreeWithSubs("AND",
+				tree.NewSyntaxTree("0"),
+				tree.NewSyntaxTree("0"),
 			),
 			want: true,
 		},
 		{
 			name: "AND(0, NOT(1))",
-			tree: *syntaxtree.NewSyntaxTreeWithSubs("AND",
-				syntaxtree.NewSyntaxTree("0"),
-				syntaxtree.NewSyntaxTreeWithSubs("NOT",
-					syntaxtree.NewSyntaxTree("1"),
+			tree: *tree.NewSyntaxTreeWithSubs("AND",
+				tree.NewSyntaxTree("0"),
+				tree.NewSyntaxTreeWithSubs("NOT",
+					tree.NewSyntaxTree("1"),
 				),
 			),
 			want: true,
 		},
 		{
 			name: "NOT(AND(0, NOT(1)))",
-			tree: *syntaxtree.NewSyntaxTreeWithSubs("NOT",
-				syntaxtree.NewSyntaxTreeWithSubs("AND",
-					syntaxtree.NewSyntaxTree("0"),
-					syntaxtree.NewSyntaxTreeWithSubs("NOT",
-						syntaxtree.NewSyntaxTree("1"),
+			tree: *tree.NewSyntaxTreeWithSubs("NOT",
+				tree.NewSyntaxTreeWithSubs("AND",
+					tree.NewSyntaxTree("0"),
+					tree.NewSyntaxTreeWithSubs("NOT",
+						tree.NewSyntaxTree("1"),
 					),
 				),
 			),
@@ -71,14 +71,14 @@ func TestCFTA_Evaluate(t *testing.T) {
 		},
 		{
 			name: "AND(AND(1, 0), AND(1, 1))",
-			tree: *syntaxtree.NewSyntaxTreeWithSubs("AND",
-				syntaxtree.NewSyntaxTreeWithSubs("AND",
-					syntaxtree.NewSyntaxTree("1"),
-					syntaxtree.NewSyntaxTree("0"),
+			tree: *tree.NewSyntaxTreeWithSubs("AND",
+				tree.NewSyntaxTreeWithSubs("AND",
+					tree.NewSyntaxTree("1"),
+					tree.NewSyntaxTree("0"),
 				),
-				syntaxtree.NewSyntaxTreeWithSubs("AND",
-					syntaxtree.NewSyntaxTree("1"),
-					syntaxtree.NewSyntaxTree("1"),
+				tree.NewSyntaxTreeWithSubs("AND",
+					tree.NewSyntaxTree("1"),
+					tree.NewSyntaxTree("1"),
 				),
 			),
 			want: true,
