@@ -93,6 +93,37 @@ func TestCFTA_Evaluate(t *testing.T) {
 	}
 }
 
+func TestCFTA_Evaluate2(t *testing.T) {
+	cfta := createCalcCFTA()
+
+	tests := []struct {
+		name string
+		tree tree.SyntaxTree
+		want bool
+	}{
+		{
+			name: "(id(1) + 2) * 3",
+			tree: *tree.NewSyntaxTreeWithSubs("*",
+				tree.NewSyntaxTreeWithSubs("+",
+					tree.NewSyntaxTreeWithSubs("id",
+						tree.NewSyntaxTree("1"),
+					),
+					tree.NewSyntaxTree("1"),
+				),
+				tree.NewSyntaxTree("3"),
+			),
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := cfta.Evaluate(tt.tree); got != tt.want {
+				t.Errorf("CFTA.Evaluate() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func createLogicCFTA() *CFTA {
 	cfta := NewCFTA()
 
@@ -115,6 +146,42 @@ func createLogicCFTA() *CFTA {
 
 	// final states
 	cfta.AddFinalState(0)
+
+	return cfta
+}
+
+func createCalcCFTA() *CFTA {
+	cfta := NewCFTA()
+
+	// states
+	const (
+		x1 = iota
+		t2
+		t3
+		n1
+		n3
+		n9
+	)
+
+	add := NewAlphabet("+", 2)
+	cfta.AddTransition(add, []int{n1, t2}, n3)
+
+	mult := NewAlphabet("*", 2)
+	cfta.AddTransition(mult, []int{n3, t3}, n9)
+
+	id := NewAlphabet("id", 1)
+	cfta.AddTransition(id, []int{x1}, n1)
+
+	one := NewAlphabet("1", 0)
+	cfta.AddTransition(one, []int{}, x1)
+
+	two := NewAlphabet("2", 0)
+	cfta.AddTransition(two, []int{}, t2)
+
+	three := NewAlphabet("3", 0)
+	cfta.AddTransition(three, []int{}, t3)
+
+	cfta.AddFinalState(n9)
 
 	return cfta
 }
