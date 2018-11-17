@@ -6,7 +6,7 @@ import (
 )
 
 func TestCFTA_Evaluate(t *testing.T) {
-	cfta := createCFTA()
+	cfta := createLogicCFTA()
 
 	tests := []struct {
 		name string
@@ -93,7 +93,7 @@ func TestCFTA_Evaluate(t *testing.T) {
 	}
 }
 
-func createCFTA() *CFTA {
+func createLogicCFTA() *CFTA {
 	cfta := NewCFTA()
 
 	// add transitions
