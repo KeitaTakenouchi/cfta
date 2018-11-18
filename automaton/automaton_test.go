@@ -1,6 +1,7 @@
 package automaton
 
 import (
+	"github.com/KeitaTakenouchi/cfta/grammar"
 	"github.com/KeitaTakenouchi/cfta/tree"
 	"testing"
 )
@@ -108,7 +109,7 @@ func TestCFTA_Evaluate2(t *testing.T) {
 					tree.NewSyntaxTreeWithSubs("id",
 						tree.NewSyntaxTree("1"),
 					),
-					tree.NewSyntaxTree("1"),
+					tree.NewSyntaxTree("2"),
 				),
 				tree.NewSyntaxTree("3"),
 			),
@@ -128,19 +129,19 @@ func createLogicCFTA() *CFTA {
 	cfta := NewCFTA()
 
 	// add transitions
-	and := NewAlphabet("AND", 2)
+	and := grammar.NewToken("AND", 2)
 	cfta.AddTransition(and, []int{0, 0}, 0)
 	cfta.AddTransition(and, []int{0, 1}, 0)
 	cfta.AddTransition(and, []int{1, 0}, 0)
 	cfta.AddTransition(and, []int{1, 1}, 1)
 
-	one := NewAlphabet("1", 0)
+	one := grammar.NewToken("1", 0)
 	cfta.AddTransition(one, []int{}, 1)
 
-	zero := NewAlphabet("0", 0)
+	zero := grammar.NewToken("0", 0)
 	cfta.AddTransition(zero, []int{}, 0)
 
-	not := NewAlphabet("NOT", 1)
+	not := grammar.NewToken("NOT", 1)
 	cfta.AddTransition(not, []int{0}, 1)
 	cfta.AddTransition(not, []int{1}, 0)
 
@@ -163,22 +164,22 @@ func createCalcCFTA() *CFTA {
 		n9
 	)
 
-	add := NewAlphabet("+", 2)
+	add := grammar.NewToken("+", 2)
 	cfta.AddTransition(add, []int{n1, t2}, n3)
 
-	mult := NewAlphabet("*", 2)
+	mult := grammar.NewToken("*", 2)
 	cfta.AddTransition(mult, []int{n3, t3}, n9)
 
-	id := NewAlphabet("id", 1)
+	id := grammar.NewToken("id", 1)
 	cfta.AddTransition(id, []int{x1}, n1)
 
-	one := NewAlphabet("1", 0)
+	one := grammar.NewToken("1", 0)
 	cfta.AddTransition(one, []int{}, x1)
 
-	two := NewAlphabet("2", 0)
+	two := grammar.NewToken("2", 0)
 	cfta.AddTransition(two, []int{}, t2)
 
-	three := NewAlphabet("3", 0)
+	three := grammar.NewToken("3", 0)
 	cfta.AddTransition(three, []int{}, t3)
 
 	cfta.AddFinalState(n9)

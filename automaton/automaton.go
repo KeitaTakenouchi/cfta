@@ -2,6 +2,7 @@ package automaton
 
 import (
 	"fmt"
+	"github.com/KeitaTakenouchi/cfta/grammar"
 	"github.com/KeitaTakenouchi/cfta/tree"
 	"strconv"
 	"strings"
@@ -10,7 +11,7 @@ import (
 // CFTA represents Concrete Finite Tree Automata.
 type CFTA struct {
 	States      []State
-	Alphabets   []Alphabet
+	Alphabets   []grammar.Token
 	FinalStates []State
 	Transitions map[TransitionInput]State
 }
@@ -19,14 +20,14 @@ type CFTA struct {
 func NewCFTA() *CFTA {
 	return &CFTA{
 		States:      make([]State, 0),
-		Alphabets:   make([]Alphabet, 0),
+		Alphabets:   make([]grammar.Token, 0),
 		FinalStates: make([]State, 0),
 		Transitions: make(map[TransitionInput]State),
 	}
 }
 
 // AddTransition adds transition.
-func (cfta *CFTA) AddTransition(f Alphabet, fromStateIds []int, toStateId int) {
+func (cfta *CFTA) AddTransition(f grammar.Token, fromStateIds []int, toStateId int) {
 	var parameterStates []State
 
 	for _, id := range fromStateIds {
@@ -96,8 +97,8 @@ func (cfta *CFTA) eval(tree tree.SyntaxTree) State {
 	for _, subTree := range tree.SubTrees {
 		subStates = append(subStates, cfta.eval(*subTree))
 	}
-	if len(subStates) != alphabet.arity {
-		msg := fmt.Sprintf("Invalid tree. arity of %s is not %d.", alphabet.symbol, len(subStates))
+	if len(subStates) != alphabet.Arity {
+		msg := fmt.Sprintf("Invalid tree. arity of %s is not %d.", alphabet.Symbol, len(subStates))
 		panic(msg)
 	}
 
@@ -110,9 +111,9 @@ func (cfta *CFTA) eval(tree tree.SyntaxTree) State {
 	return nextState
 }
 
-func (cfta *CFTA) searchAlphabetBySymbol(symbol string) *Alphabet {
+func (cfta *CFTA) searchAlphabetBySymbol(symbol string) *grammar.Token {
 	for _, alphabet := range cfta.Alphabets {
-		if symbol == alphabet.symbol {
+		if symbol == alphabet.Symbol {
 			return &alphabet
 		}
 	}
@@ -168,32 +169,14 @@ func (s *State) String() string {
 	return "q_" + strconv.Itoa(s.id)
 }
 
-// Alphabet is a symbol with arity.
-type Alphabet struct {
-	symbol string
-	arity  int
-}
-
-// NewAlphabet is a constructor of Alphabet.
-func NewAlphabet(symbol string, arity int) Alphabet {
-	return Alphabet{
-		symbol: symbol,
-		arity:  arity,
-	}
-}
-
-func (al *Alphabet) String() string {
-	return al.symbol + "[" + strconv.Itoa(al.arity) + "]"
-}
-
 // TransitionInput is a pair of alphabet and parameters.
 type TransitionInput struct {
-	f      Alphabet
+	f      grammar.Token
 	params parameters
 }
 
-func newTransitionInput(f Alphabet, states []State) TransitionInput {
-	if f.arity != len(states) {
+func newTransitionInput(f grammar.Token, states []State) TransitionInput {
+	if f.Arity != len(states) {
 		panic("illegal arguments.")
 	}
 
@@ -219,7 +202,7 @@ func newTransitionInput(f Alphabet, states []State) TransitionInput {
 
 func (ti *TransitionInput) String() string {
 	var buf strings.Builder
-	buf.WriteString(ti.f.symbol)
+	buf.WriteString(ti.f.Symbol)
 
 	buf.WriteString("(")
 	states := ti.params.getParams()
