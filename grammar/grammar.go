@@ -27,7 +27,7 @@ func NewGrammar() *Grammar {
 // AddProdoctionRule adds a prodoction rule to the grammar.
 func (g *Grammar) AddProdoctionRule(left NonTerminalSymbol, right Token, args ...Symbol) {
 	if right.Arity != len(args) {
-		msg := fmt.Sprintf("arith is %d but length of args is %d", right.Arity, len(args))
+		msg := fmt.Sprintf("arity is %d but length of args is %d", right.Arity, len(args))
 		panic(msg)
 	}
 
