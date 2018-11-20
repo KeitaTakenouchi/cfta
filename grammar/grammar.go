@@ -12,7 +12,7 @@ type Grammar struct {
 
 // NonTerminalSymbol is a non terminal symbol of DSL
 type NonTerminalSymbol struct {
-	Text string
+	Symbol string
 }
 
 // Token is a symbol with arity.
