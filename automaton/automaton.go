@@ -98,7 +98,7 @@ func (cfta *CFTA) eval(tree tree.SyntaxTree) State {
 		subStates = append(subStates, cfta.eval(*subTree))
 	}
 	if len(subStates) != alphabet.Arity {
-		msg := fmt.Sprintf("Invalid tree. arity of %s is not %d.", alphabet.Symbol, len(subStates))
+		msg := fmt.Sprintf("Invalid tree. arity of %s is not %d.", alphabet.GetText(), len(subStates))
 		panic(msg)
 	}
 
@@ -113,7 +113,7 @@ func (cfta *CFTA) eval(tree tree.SyntaxTree) State {
 
 func (cfta *CFTA) searchAlphabetBySymbol(symbol string) *grammar.Token {
 	for _, alphabet := range cfta.Alphabets {
-		if symbol == alphabet.Symbol {
+		if symbol == alphabet.GetText() {
 			return &alphabet
 		}
 	}
@@ -202,7 +202,7 @@ func newTransitionInput(f grammar.Token, states []State) TransitionInput {
 
 func (ti *TransitionInput) String() string {
 	var buf strings.Builder
-	buf.WriteString(ti.f.Symbol)
+	buf.WriteString(ti.f.GetText())
 
 	buf.WriteString("(")
 	states := ti.params.getParams()
